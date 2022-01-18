@@ -14,7 +14,8 @@ const updates = () => {
   axios
     .get(`https://api.github.com/repos/${username}/${repoName}`, { auth: { username, password: token } })
     .then(res => {
-      shell - shell.exec('rm -rf target-repo')
+      const removeScript = process.env.SHELL && (process.env.SHELL.includes('bash') || process.env.SHELL.includes('zsh')) ? 'rm -rf target-repo' : 'rd /s /q target-repo'
+      shell.exec(removeScript)
       shell.exec(`git clone ${res.data.clone_url.replace('https://', `https://x-access-token:${token}@`)} target-repo`)
       fs.readFile(`target-repo/${filename}`, { encoding: 'utf-8' }, (err, data) => {
         if (!err) {
